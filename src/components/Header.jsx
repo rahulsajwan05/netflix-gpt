@@ -1,9 +1,13 @@
 import { signOut } from "firebase/auth";
 import { auth } from "../utils/firebase";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+
+
   const navigate = useNavigate();
+  const user =  useSelector(state => state.user);
   const handleSignOut = () =>{
     signOut(auth)
       .then(() => {
@@ -13,6 +17,7 @@ const Header = () => {
         navigate("/error");
       });
   }
+  console.warn("User Data: ", user);
   return (
     <div className="absolute w-screen px-8 py-2 bg-gradient-to-b from-black z-10 flex justify-between">
       <img
@@ -21,14 +26,15 @@ const Header = () => {
         alt="LOGO"
       />
 
-      <div className="flex px-8 py-2">
+      {user && (<div className="flex px-8 py-2">
         <img
           className="h-14 w-14"
-          src="https://occ-0-6246-2186.1.nflxso.net/dnm/api/v6/vN7bi_My87NPKvsBoib006Llxzg/AAAABTZ2zlLdBVC05fsd2YQAR43J6vB1NAUBOOrxt7oaFATxMhtdzlNZ846H3D8TZzooe2-FT853YVYs8p001KVFYopWi4D4NXM.png?r=229"
-          alt="Logo"
+          src={user?.userData.photoURL}
+          alt="userIcon"
         />
         <button className="ml-2" onClick={handleSignOut}> Sign Out</button>
       </div>
+      )}
     </div>
   );
 };
